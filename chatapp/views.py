@@ -1,8 +1,9 @@
-from django.shortcuts import render, get_object_or_404
-from django.contrib.auth import get_user_model
-from chatapp.models import *
-import logging
+from django.shortcuts import render
 
-def start_chat(request):
-    pass
 
+def index(request):
+    return render(request, 'chatapp/index.html')
+
+
+def room(request, room_name):
+    return render(request, 'chatapp/room.html', {'room_name': room_name})

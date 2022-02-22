@@ -47,7 +47,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -143,21 +143,19 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# redis setting
-ASGI_APPLICATION = 'config.routing.application'
-
-CHANNEL_LAYERS = {
-    'default':{
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
-        }
-    }
-}
-
-os.environ["DJANGO_ALLOW_ASYNC_UNDAFE"] = "true"
 
 # 로그인 성공 후 이동하는 URL
 LOGIN_REDIRECT_URL = '/common/signup'
 # 로그아웃시 이동하는 URL
 LOGOUT_REDIRECT_URL = '/common/signup'
+
+# Channels
+ASGI_APPLICATION = 'chatapp.asgi.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
