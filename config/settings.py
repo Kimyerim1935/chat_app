@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 import os, json
+from datetime import timedelta
 from pathlib import Path
 from django.core.exceptions import ImproperlyConfigured
 
@@ -54,9 +55,22 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+
+    # myapp
+    'accounts',
     'chatapp',
-    'common',
+
+    # # rest_framework
+    'rest_framework',
+    # 'rest_framework_simplejwt'
+    'rest_framework.authtoken',
+    'allauth',
+    'allauth.account',
+    'dj_rest_auth.registration',
+    'dj_rest_auth',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -145,9 +159,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # 로그인 성공 후 이동하는 URL
-LOGIN_REDIRECT_URL = '/common/signup'
+LOGIN_REDIRECT_URL = '/accounts/signup'
 # 로그아웃시 이동하는 URL
-LOGOUT_REDIRECT_URL = '/common/signup'
+LOGOUT_REDIRECT_URL = '/accounts/signup'
 
 # Channels
 ASGI_APPLICATION = 'chatapp.asgi.application'
@@ -159,3 +173,9 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+SITE_ID = 1
+AUTH_USER_MODEL = 'accounts.User'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
