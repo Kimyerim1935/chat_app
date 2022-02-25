@@ -63,12 +63,13 @@ INSTALLED_APPS = [
 
     # # rest_framework
     'rest_framework',
-    # 'rest_framework_simplejwt'
+    'rest_framework_simplejwt',
     'rest_framework.authtoken',
     'allauth',
     'allauth.account',
     'dj_rest_auth.registration',
     'dj_rest_auth',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 
@@ -179,3 +180,21 @@ AUTH_USER_MODEL = 'accounts.User'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+    ),
+}
+
+REST_USE_JWT = True
+from datetime import timedelta
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=2),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+}
