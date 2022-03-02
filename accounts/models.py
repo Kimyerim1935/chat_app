@@ -1,6 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from config import settings
+from django.contrib.auth import get_user_model
 
 class UserManager(BaseUserManager): # 유저 생성하는 헬퍼 클래스
     # 일반 user 생성
@@ -33,7 +34,7 @@ class UserManager(BaseUserManager): # 유저 생성하는 헬퍼 클래스
         return user
 
 
-class User(AbstractBaseUser): # 실제 모델을 상속받아 생성하는 클래스
+class User(AbstractBaseUser, PermissionsMixin): # 실제 모델을 상속받아 생성하는 클래스
     id = models.AutoField(primary_key=True)
     email = models.EmailField(default='', max_length=100, null=False, blank=False, unique=True)
     username = models.CharField(default='', max_length=100, null=False, blank=False, unique=True)
@@ -42,6 +43,7 @@ class User(AbstractBaseUser): # 실제 모델을 상속받아 생성하는 클�
     # User 모델의 필수 field
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
+    date_joined = models.DateTimeField(auto_now_add=True)
 
     # 헬퍼 클래스 사용
     objects = UserManager()
@@ -53,3 +55,26 @@ class User(AbstractBaseUser): # 실제 모델을 상속받아 생성하는 클�
 
     def __str__(self):
         return self.username
+
+    def has_perm(self, perm, obj=None):
+        "Does the user have a specific permission?"
+        # Simplest possible answer: Yes, always
+        return True
+
+    def has_module_perms(self, app_label):
+        "Does the user have permissions to view the app `app_label`?"
+        # Simplest possible answer: Yes, always
+        return True
+
+    @property
+    def is_staff(self):
+        "Is the user a member of staff?"
+        # Simplest possible answer: All admins are staff
+        return self.is_admin
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) # 현 계정의 사용자를 가져올 수 있음.
+    nickname = models.CharField(max_length=64)
+    description = models.TextField(blank=True)
+    profile_photo = models.ImageField(upload_to='photos/%Y/%m/%d', blank=True) # 값을 채워넣지 않아도 되는 속성.

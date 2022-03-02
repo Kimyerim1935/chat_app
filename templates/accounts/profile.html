@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+
+
+<div class="row">
+    <div class="col-xs-6 col-md-3">
+        {% if profile.profile.profile_photo %}
+        <img class="round" src="{{profile.profile.profile_photo.url}}" width="200"> <br>
+        {% else %}
+        <img class="round" src="{% static 'accounts/images/profile1.jpg' %}" width="200"> <br>
+        {% endif %}
+    </div>
+
+    <div class="col-xs-6 col-md-3">
+        {% if profile.profile.nickname %}
+        <h2>{{profile.profile.user}}</h2>
+        {% endif %}
+        {% if user == profile.profile.user %}   <!-- 로그인한 사용자와 profile_user(프로필 소유자)가 일치할 때만 프로필 편집이 가능하도록 함 -->
+        <a href="{% url 'accounts:profile_update' %}">
+            <button type="button" class="btn btn-default">프로필 편집</button></a></h2>
+        {% endif %}
+        <h3> 이름: {{profile.profile.nickname}} <br></h3>
+        <h3> 자기소개: {{profile.profile.description}}</h3>
+<!--        <h3>{{profile.profile.profile_photo}} </h3>-->
+<!--        <img class="round" src="{{profile.profile.profile_photo.url}}" width="200"> <br>-->
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<link rel="stylesheet" href="{% static 'accounts/style.css' %}">
+{% endblock %}
