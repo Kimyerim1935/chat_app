@@ -41,10 +41,11 @@ def SignUpView(request):
 
 
 def ProfileView(request, username): # urls.py에서 넘겨준 인자를 username으로 받는다.
-    if not Profile.objects.filter(user=request.user):
-        Profile.objects.create(user = request.user)
-    user = get_object_or_404(get_user_model(), username=username)
-    context = {'user':user}
+    if request.user.username == username:
+        if not Profile.objects.filter(user=request.user):
+            Profile.objects.create(user = request.user)
+    person = get_object_or_404(get_user_model(), username=username)
+    context = {'person':person, 'me': request.user}
     return render(request, 'accounts/profile.html', context)
 # 프로필이 없으면 프로필 생성 페이지로 간다.
 # 프로필이 있으면 프로필을 보여준다.
